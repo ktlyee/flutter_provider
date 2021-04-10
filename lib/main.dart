@@ -1,4 +1,5 @@
 import 'package:authen_provider/notifier/auth_notifier.dart';
+import 'package:authen_provider/notifier/food_notifier.dart';
 import 'package:authen_provider/screens/feed_page.dart';
 import 'package:authen_provider/screens/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +14,9 @@ void main() async {
       ChangeNotifierProvider(
         create: (context) => AuthNotifier(),
       ),
+      ChangeNotifierProvider(
+        create: (context) => FoodNotifier(),
+      )
     ],
     child: MyApp(),
   ));
