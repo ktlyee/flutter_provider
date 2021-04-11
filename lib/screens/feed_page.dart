@@ -45,6 +45,8 @@ class _FeedState extends State<FeedPage> {
           return ListView.separated(
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
+                  leading: Image.network(foodNotifier.foodList[index].image,
+                      width: 100, fit: BoxFit.fitWidth),
                   title: Text(foodNotifier.foodList[index].name),
                   subtitle: Text(foodNotifier.foodList[index].category),
                 );
