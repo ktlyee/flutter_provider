@@ -1,6 +1,7 @@
 import 'package:authen_provider/model/food.dart';
 import 'package:authen_provider/notifier/auth_notifier.dart';
 import 'package:authen_provider/notifier/food_notifier.dart';
+import 'package:authen_provider/screens/detail_page.dart';
 import 'package:authen_provider/services/auth_service.dart';
 import 'package:authen_provider/services/food_service.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,11 @@ class _FeedState extends State<FeedPage> {
                       width: 100, fit: BoxFit.fitWidth),
                   title: Text(foodNotifier.foodList[index].name),
                   subtitle: Text(foodNotifier.foodList[index].category),
+                  onTap: () {
+                    foodNotifier.currentFood = foodNotifier.foodList[index];
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => FoodDetailPage()));
+                  },
                 );
               },
               itemCount: foodNotifier.foodList.length,
