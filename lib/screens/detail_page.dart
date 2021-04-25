@@ -1,6 +1,7 @@
 import 'package:authen_provider/model/food.dart';
 import 'package:authen_provider/notifier/food_notifier.dart';
 import 'package:authen_provider/screens/foodForm_page.dart';
+import 'package:authen_provider/services/food_service.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,11 @@ class FoodDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context);
+
+    _onFoodDeleted(Food food) {
+      Navigator.pop(context);
+      foodNotifier.deleteFood(food);
+    }
 
     return Scaffold(
         appBar: AppBar(
@@ -75,7 +81,8 @@ class FoodDetailPage extends StatelessWidget {
             SizedBox(height: 20),
             FloatingActionButton(
                 heroTag: "button2",
-                onPressed: () {},
+                onPressed: () =>
+                    deleteFood(foodNotifier.currentFood, _onFoodDeleted),
                 child: Icon(Icons.delete),
                 foregroundColor: Colors.white,
                 backgroundColor: Colors.red)

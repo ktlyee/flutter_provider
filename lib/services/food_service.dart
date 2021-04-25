@@ -5,6 +5,7 @@ import 'package:authen_provider/notifier/food_notifier.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
+import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
 
 getFoods(FoodNotifier foodNotifier) async {
@@ -76,6 +77,23 @@ _uploadFood(Food food, bool isUpdating, Function foodUploaded,
     print("uploaded food successfully: ${food.toString}");
 
     await documentRef.set(food.toMap(), SetOptions(merge: true));
+
     foodUploaded(food);
   }
+}
+
+deleteFood(Food food, Function foodDeleted) async {
+  if (food.image != null) {
+    Reference storageRef =
+        await FirebaseStorage.instance.refFromURL(food.image);
+
+    // print(storageRef.path);
+
+    await storageRef.delete();
+
+    print('image deleted');
+  }
+
+  await FirebaseFirestore.instance.collection('Foods').doc(food.id).delete();
+  foodDeleted(food);
 }
