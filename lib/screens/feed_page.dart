@@ -2,6 +2,7 @@ import 'package:authen_provider/model/food.dart';
 import 'package:authen_provider/notifier/auth_notifier.dart';
 import 'package:authen_provider/notifier/food_notifier.dart';
 import 'package:authen_provider/screens/detail_page.dart';
+import 'package:authen_provider/screens/foodForm_page.dart';
 import 'package:authen_provider/services/auth_service.dart';
 import 'package:authen_provider/services/food_service.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,7 @@ class _FeedState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    AuthNotifier authNotifier =
-        Provider.of<AuthNotifier>(context, listen: false);
+    AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context);
 
     return Scaffold(
@@ -46,8 +46,12 @@ class _FeedState extends State<FeedPage> {
           return ListView.separated(
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  leading: Image.network(foodNotifier.foodList[index].image,
-                      width: 100, fit: BoxFit.fitWidth),
+                  leading: Image.network(
+                      foodNotifier.foodList[index].image != null
+                          ? foodNotifier.foodList[index].image
+                          : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
+                      width: 100,
+                      fit: BoxFit.fitWidth),
                   title: Text(foodNotifier.foodList[index].name),
                   subtitle: Text(foodNotifier.foodList[index].category),
                   onTap: () {
@@ -63,6 +67,16 @@ class _FeedState extends State<FeedPage> {
                   color: Colors.black,
                 );
               });
-        })));
+        })),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            foodNotifier.currentFood = null;
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    FoodFormPage(isUpdating: false)));
+          },
+          child: Icon(Icons.add),
+          foregroundColor: Colors.white,
+        ));
   }
 }
