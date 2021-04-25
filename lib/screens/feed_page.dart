@@ -27,6 +27,10 @@ class _FeedState extends State<FeedPage> {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context);
 
+    Future<void> _refreshList() async {
+      getFoods(foodNotifier);
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: Text(authNotifier.user != null
@@ -41,9 +45,8 @@ class _FeedState extends State<FeedPage> {
                 ))
           ],
         ),
-        body: Container(child:
-            Consumer<FoodNotifier>(builder: (context, foodNotifier, child) {
-          return ListView.separated(
+        body: new RefreshIndicator(
+          child: ListView.separated(
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   leading: Image.network(
@@ -66,8 +69,9 @@ class _FeedState extends State<FeedPage> {
                 return Divider(
                   color: Colors.black,
                 );
-              });
-        })),
+              }),
+          onRefresh: _refreshList,
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             foodNotifier.currentFood = null;

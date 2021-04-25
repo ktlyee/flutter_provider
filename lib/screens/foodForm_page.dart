@@ -17,6 +17,8 @@ class FoodFormPage extends StatefulWidget {
 
 class _FoodFormPageState extends State<FoodFormPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   List _subIngredients = [];
   Food _currentFood;
   String _imageUrl;
@@ -31,11 +33,11 @@ class _FoodFormPageState extends State<FoodFormPage> {
 
     if (foodNotifier.currentFood != null) {
       _currentFood = foodNotifier.currentFood;
-      _subIngredients.addAll(_currentFood.subIngredients);
     } else {
       _currentFood = Food();
     }
 
+    _subIngredients.addAll(_currentFood.subIngredients);
     _imageUrl = _currentFood.image;
   }
 
@@ -149,6 +151,13 @@ class _FoodFormPageState extends State<FoodFormPage> {
     );
   }
 
+  _onFoodUploaded(Food food) {
+    FoodNotifier foodNotifier =
+        Provider.of<FoodNotifier>(context, listen: false);
+    foodNotifier.addFood(food);
+    Navigator.pop(context);
+  }
+
   _addSubIngredient(String text) {
     if (text.isNotEmpty) {
       setState(() {
@@ -158,7 +167,7 @@ class _FoodFormPageState extends State<FoodFormPage> {
     }
   }
 
-  _saveFood(context) {
+  _saveFood() {
     print('saveFood Called');
     if (!_formKey.currentState.validate()) {
       return;
@@ -169,7 +178,8 @@ class _FoodFormPageState extends State<FoodFormPage> {
 
     _currentFood.subIngredients = _subIngredients;
 
-    updateFoodAndImage(_currentFood, widget.isUpdating, _imageFile);
+    updateFoodAndImage(
+        _currentFood, widget.isUpdating, _imageFile, _onFoodUploaded);
 
     print("name: ${_currentFood.name}");
     print("category: ${_currentFood.category}");
@@ -181,6 +191,7 @@ class _FoodFormPageState extends State<FoodFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text('FoodForm'),
         ),
@@ -246,7 +257,10 @@ class _FoodFormPageState extends State<FoodFormPage> {
               ),
             )),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => _saveFood(context),
+          onPressed: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+            _saveFood();
+          },
           child: Icon(Icons.save),
           foregroundColor: Colors.white,
         ));

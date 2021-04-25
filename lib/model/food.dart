@@ -5,7 +5,7 @@ class Food {
   String name;
   String category;
   String image;
-  List subIngredients;
+  List subIngredients = [];
   Timestamp createdAt;
   Timestamp updatedAt;
 

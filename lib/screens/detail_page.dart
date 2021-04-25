@@ -59,14 +59,27 @@ class FoodDetailPage extends StatelessWidget {
             )
           ]),
         )),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    FoodFormPage(isUpdating: true)));
-          },
-          child: Icon(Icons.edit),
-          foregroundColor: Colors.white,
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            FloatingActionButton(
+              heroTag: "button1",
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        FoodFormPage(isUpdating: true)));
+              },
+              child: Icon(Icons.edit),
+              foregroundColor: Colors.white,
+            ),
+            SizedBox(height: 20),
+            FloatingActionButton(
+                heroTag: "button2",
+                onPressed: () {},
+                child: Icon(Icons.delete),
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red)
+          ],
         ));
   }
 }

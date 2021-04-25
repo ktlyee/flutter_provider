@@ -23,7 +23,8 @@ getFoods(FoodNotifier foodNotifier) async {
   foodNotifier.foodList = _foodList;
 }
 
-updateFoodAndImage(Food food, bool isUpdating, File localFile) async {
+updateFoodAndImage(
+    Food food, bool isUpdating, File localFile, Function foodUploaded) async {
   if (localFile != null) {
     print("uploading image");
 
@@ -43,14 +44,15 @@ updateFoodAndImage(Food food, bool isUpdating, File localFile) async {
     String url = await firebaseStorageRef.getDownloadURL();
 
     print("download url: $url");
-    _uploadFood(food, isUpdating, imageUrl: url);
+    _uploadFood(food, isUpdating, foodUploaded, imageUrl: url);
   } else {
     print("...skipping image upload");
-    _uploadFood(food, isUpdating);
+    _uploadFood(food, isUpdating, foodUploaded);
   }
 }
 
-_uploadFood(Food food, bool isUpdating, {String imageUrl}) async {
+_uploadFood(Food food, bool isUpdating, Function foodUploaded,
+    {String imageUrl}) async {
   CollectionReference foodRef = FirebaseFirestore.instance.collection('Foods');
 
   if (imageUrl != null) {
@@ -62,6 +64,7 @@ _uploadFood(Food food, bool isUpdating, {String imageUrl}) async {
 
     await foodRef.doc(food.id).update(food.toMap());
 
+    foodUploaded(food);
     print("updated food with id: ${food.id}");
   } else {
     food.createdAt = Timestamp.now();
@@ -73,5 +76,6 @@ _uploadFood(Food food, bool isUpdating, {String imageUrl}) async {
     print("uploaded food successfully: ${food.toString}");
 
     await documentRef.set(food.toMap(), SetOptions(merge: true));
+    foodUploaded(food);
   }
 }
